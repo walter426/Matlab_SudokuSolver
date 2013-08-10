@@ -18,12 +18,12 @@
 
 %}
 
-function IsResultCorrect = SudokuVerifier(Sudo)
-
+function IsResultCorrect = SudokuVerifier(Sudo, Sudo_0_size, SubSudo_0_size)
+    
 	IsResultCorrect = 1;
 
-	for i = 1:9
-		for j = 1:9
+	for i = 1:Sudo_0_size(1)
+		for j = 1:Sudo_0_size(2)
 			[row, col] = find(Sudo(i, :) == Sudo(i, j));
 			
 			if length(row) > 1
@@ -39,11 +39,13 @@ function IsResultCorrect = SudokuVerifier(Sudo)
 				break;
 			end
 			
-			row_start_l = 3*fix((i - 1)/3) + 1;
-			col_start_l = 3*fix((j - 1)/3) + 1;
-					
-			[row, col] = find(Sudo(row_start_l : row_start_l + 2, col_start_l : col_start_l + 2) == Sudo(i, j));
-			
+            
+            if (rem(i, SubSudo_0_size(1)) ~= 1) || (rem(j, SubSudo_0_size(2)) ~= 1)
+                continue
+            end
+            
+            [row, col] = find(Sudo(i:i + 2, j:j + 2) == Sudo(i, j));
+            
 			if length(col) > 1
 				IsResultCorrect = 0;
 				break;

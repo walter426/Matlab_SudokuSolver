@@ -51,15 +51,15 @@ Sudo_0 = [
         ];
 %%}
 
-%Count start time
-display(strcat('Start Time: ', datestr(now, 'HH:MM:SS')))
+%Start solving
+[Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = SudokuSolver_Initial(Sudo_0);
 
-[Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = SudokuSolver(Sudo_0);
+if isempty(Sudo_End) == 1
+    return
+end
 
-%Count End time
-display(strcat('End Time: ', datestr(now, 'HH:MM:SS')))
-
-Sudo_CandCnt = sum(Sudo_Cand, 3);
+%Display the result
+Sudo_CandCnt = sum(Sudo_Cand, ndims(Sudo_Cand));
 
 display(Sudo_End)
 display(Sudo_CandCnt)

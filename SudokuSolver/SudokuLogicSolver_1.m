@@ -97,13 +97,12 @@ function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect] = SudokuLogicSol
 
 				
 				%Omit candidates in local 3 x 3 matrix
-                row_start_l = SubSudo_0_size(1)*fix((i - 1)/SubSudo_0_size(1)) + 1;
-                col_start_l = SubSudo_0_size(2)*fix((j - 1)/SubSudo_0_size(2)) + 1;
+				row_start_l = 3*fix((i - 1)/3) + 1;
+				col_start_l = 3*fix((j - 1)/3) + 1;
                 
                 SubSudo_rng_row = [row_start_l : row_start_l + SubSudo_0_size(1) - 1];
                 SubSudo_rng_col = [col_start_l : col_start_l + SubSudo_0_size(2) - 1];
-                  
-                  
+
                 if (rem(i, SubSudo_0_size(1)) == 0) && (rem(j, SubSudo_0_size(2)) == 0)
                     [row, col] = find(Sudo_End(SubSudo_rng_row, SubSudo_rng_col));
                     NumOfBlocksFilled = length(col);
@@ -126,10 +125,12 @@ function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect] = SudokuLogicSol
                     SubSudo_Cand = Sudo_Cand(SubSudo_rng_row, SubSudo_rng_col, :);
 
                     %Check row by row
-                    SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDimN(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size, 1);
-
+                    %SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDimN(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size, 1);
                     %Check col by col
-                    SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDimN(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size, 1);
+                    %SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDimN(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size, 2);
+
+                    SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDim1(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size);
+                    SubSudo_Cand = Sudoku_OmitCandInSubSudoFrmDim2(SubSudo_0, SubSudo_Cand, Sudo_0_size, SubSudo_0_size);
                     
                     Sudo_Cand(SubSudo_rng_row, SubSudo_rng_col, :) = SubSudo_Cand;
                     %%}

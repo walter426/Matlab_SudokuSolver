@@ -18,21 +18,21 @@
 
 %}
 
-function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = SudokuSolver(Sudo_0)
+function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = SudokuSolver(Sudo_0, Sudo_0_size, SubSudo_0_size)
 	NumOfGuess = 0;
 	
 	%Solve Sudo logically
-	[Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect] = SudokuLogicSolver(Sudo_0);
+	[Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect] = SudokuLogicSolver(Sudo_0, Sudo_0_size, SubSudo_0_size);
 
 	if IsSudoComplete == 1 || IsResultCorrect == 0
 		return
 	end
 
 	%Get Candidates Count 
-	Sudo_CandCnt = sum(Sudo_Cand, 3);
+	Sudo_CandCnt = sum(Sudo_Cand, ndims(Sudo_Cand));
 	
 	%Find unfilled blocks with the minimum candidate count
-	for MinCandCnt = 2:9
+	for MinCandCnt = 2:Sudo_0_size(1)
 		[row, col] = find(Sudo_CandCnt == MinCandCnt);
 		
 		NumOfBlks_MinCand = length(row);
@@ -48,7 +48,7 @@ function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = Su
 	i_l = row(1);
 	j_l = col(1);
 	
-	for k = 1:9
+	for k = 1:Sudo_0_size(1)
 		if Sudo_Cand(i_l, j_l, k) == 0
 			continue;
 		end
@@ -57,12 +57,10 @@ function [Sudo_End, Sudo_Cand, IsSudoComplete, IsResultCorrect, NumOfGuess] = Su
 		Sudo_G(i_l, j_l) = k;
 
 		NumOfGuess = NumOfGuess + 1;
-		[Sudo_G_End, Sudo_G_Cand, IsSudoComplete_G, IsResultCorrect_G, NumOfGuess_G] = SudokuSolver(Sudo_G);
+		[Sudo_G_End, Sudo_G_Cand, IsSudoComplete_G, IsResultCorrect_G, NumOfGuess_G] = SudokuSolver(Sudo_G, Sudo_0_size, SubSudo_0_size);
 		NumOfGuess = NumOfGuess + NumOfGuess_G;
-		
+
 		if (IsSudoComplete_G == 1 && IsResultCorrect_G == 1)
-			StopGuess = 1;
-			
 			Sudo_End = Sudo_G_End;
 			Sudo_Cand = Sudo_G_Cand;
 			IsSudoComplete = IsSudoComplete_G;
